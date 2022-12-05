@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(5, 1fr);
+    gap: 10x;
 }
 
 .bttn {
@@ -14,20 +15,33 @@
     cursor: pointer;
 } 
 
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .calculator {
     width: 280px;
     height: 500px;
 }
 
-.screen {
+.display {
     background-color: black;
     color: antiquewhite;
     text-align: right;
     font-weight: bold;
-    font-size: xx-large;
     padding: 10px;
 }
 
-.operator {
+.upperDisplay {
+    min-height: 32px;
+    font-size: 20px;
+}
+.bigDisplay {
+    /*min-height: 64px;*/
+    font-size: 40px;
+}
+
+.orange {
     background-color: darkorange;  
 }

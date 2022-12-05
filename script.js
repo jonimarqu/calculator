@@ -1,31 +1,71 @@
-function add(a, b) {  // from two operands
-    return a + b;
-};
+let savedOperand;
+let operation;
 
-function subtract(a, b) {
+const functions = {
+    add(a, b) {
+    return Number(a) + Number(b);
+    },
+
+    subtract(a, b) {
     return a - b;
-};
+    },
 
-function sum(operands) {  // from an array of operands
-    return operands.reduce( (sum, item) => { return sum + item }, 0 )
-};
+    multiply(a, b) {
+    return a * b;
+    },
 
-function multiply(operands) {  // from an array of operands
-    return operands.reduce( (factors, item) => { return factors * item }, 1 )
-};
-
-function power(a, b) {
+    power(a, b) {
     return a ** b;
-};
+    },
 
-function divide(a, b) {
+    divide(a, b) {
     return a / b;
+    },
 };
-
-// in future gotta make all functions use arrays
 
 function operate(operator, a, b) { // for when pressing equal, to call proper function
-    return operator(a,b);
+console.log(operator)
+    return functions[operator](a,b)
 }
 
-console.log(operate(divide,10,5)); // OK
+const numbers = document.querySelectorAll(".number");
+const operators = document.querySelectorAll(`.operator`);
+
+const upperDisplay = document.querySelector(".upperDisplay");
+const bigDisplay = document.querySelector(".bigDisplay");
+const clearBttn = document.querySelector("#clear");
+const powerBttn = document.querySelector("#power");
+const percentBttn = document.querySelector("#percent");
+const divideBttn = document.querySelector("#divide");
+const multiplyBttn = document.querySelector("#multiply");
+const takeBttn = document.querySelector("#take");
+const addBttn = document.querySelector("#add");
+const equalsBttn = document.querySelector("#equals");
+
+clear.onclick = () => {
+    bigDisplay.textContent = `0`;
+    upperDisplay.textContent = ``;
+};
+
+numbers.forEach( (number)=> number.onclick = () => { appendNumber(number.textContent) } );
+
+function appendNumber(number) {
+    if ( number === "." && bigDisplay.textContent.includes(".") ) return;
+    if ( number >= 0 && bigDisplay.textContent === `0` ) bigDisplay.textContent = ``;
+    bigDisplay.textContent += number;
+};
+
+operators.forEach( (bttn) => bttn.onclick = () => { setOperator(bttn) } );
+
+function setOperator (bttn) {
+    console.log(bttn.id);
+    operation = bttn.id;
+    savedOperand = bigDisplay.textContent;
+    upperDisplay.textContent = savedOperand + ` ` + bttn.textContent + ` `;
+    bigDisplay.textContent = 0;
+};
+
+equalsBttn.onclick = () => {
+    upperDisplay.textContent += bigDisplay.textContent;
+    bigDisplay.textContent = operate( operation , savedOperand , bigDisplay.textContent )
+};
