@@ -1,5 +1,7 @@
 let savedOperand;
+let currentOperand;
 let operation;
+let result;
 
 const functions = {
     add(a, b) {
@@ -24,8 +26,9 @@ const functions = {
 };
 
 function operate(operator, a, b) { // for when pressing equal, to call proper function
-console.log(operator)
-    return functions[operator](a,b)
+    result = functions[operator](a,b)
+    savedOperand = result;
+    return result;
 }
 
 const numbers = document.querySelectorAll(".number");
@@ -34,22 +37,20 @@ const operators = document.querySelectorAll(`.operator`);
 const upperDisplay = document.querySelector(".upperDisplay");
 const bigDisplay = document.querySelector(".bigDisplay");
 const clearBttn = document.querySelector("#clear");
-const powerBttn = document.querySelector("#power");
 const percentBttn = document.querySelector("#percent");
-const divideBttn = document.querySelector("#divide");
-const multiplyBttn = document.querySelector("#multiply");
-const takeBttn = document.querySelector("#take");
-const addBttn = document.querySelector("#add");
 const equalsBttn = document.querySelector("#equals");
 
 clear.onclick = () => {
     bigDisplay.textContent = `0`;
     upperDisplay.textContent = ``;
+    savedOperand = null;
+    operation = null;
 };
 
 numbers.forEach( (number)=> number.onclick = () => { appendNumber(number.textContent) } );
 
 function appendNumber(number) {
+    if (result) bigDisplay.textContent = 0;
     if ( number === "." && bigDisplay.textContent.includes(".") ) return;
     if ( number >= 0 && bigDisplay.textContent === `0` ) bigDisplay.textContent = ``;
     bigDisplay.textContent += number;
@@ -58,14 +59,29 @@ function appendNumber(number) {
 operators.forEach( (bttn) => bttn.onclick = () => { setOperator(bttn) } );
 
 function setOperator (bttn) {
-    console.log(bttn.id);
+
+
+    if (operation === bttn.id ) return;  // if same then return, if diff then change operator
+
+ /*   
+    // use result so that i can keep using last one DEBE EQUALIZAR
+    if (result) {
+        bigDisplay = 0;
+    }
+*/
+
     operation = bttn.id;
-    savedOperand = bigDisplay.textContent;
-    upperDisplay.textContent = savedOperand + ` ` + bttn.textContent + ` `;
-    bigDisplay.textContent = 0;
+
+    if (!savedOperand) {
+        savedOperand = bigDisplay.textContent;
+        upperDisplay.textContent = savedOperand + ` ` + bttn.textContent + ` `;
+        bigDisplay.textContent = 0;
+    } else {
+        upperDisplay.textContent = savedOperand + ` ` + bttn.textContent + ` `;
+    }
 };
 
 equalsBttn.onclick = () => {
-    upperDisplay.textContent += bigDisplay.textContent;
+    upperDisplay.textContent += bigDisplay.textContent + ` = `;
     bigDisplay.textContent = operate( operation , savedOperand , bigDisplay.textContent )
 };
